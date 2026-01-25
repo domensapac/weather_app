@@ -56,7 +56,12 @@ function updateText(placeName, municipality, elevation, latitude, longitude){
 
 function outputData(data){
     console.log(data); 
-    array.forEach(element => {
-        
+    for(var i=0; i< data.hourly.; i++){ // !
+        console.log("a");
+    }
+    /*
+    Object.values(data.temperature_2m).forEach(element => {
+        console.log(element); 
     });
+    */
 }

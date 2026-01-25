@@ -12,7 +12,7 @@
 <div class="container-fluid">
     <div class="col-6">
         <h3 id="placeName"></h3>
-        <h3 id="municipality">a</h3>
+        <h3 id="municipality"></h3>
         <h3 id="elevation"></h3>
         <h3 id="latitude"></h3>
         <h3 id="longitude"></h3>
