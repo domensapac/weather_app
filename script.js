@@ -68,21 +68,40 @@ function displayData(data){
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const dataHourly = data.hourly; 
     var arrDays = new Set();
+    var arrTemps = [];
     console.log(data); 
-
     for(var i=0; i< dataHourly.time.length ; i++){
         let dateTime = dataHourly.time[i].split("T")[0] ; 
         arrDays.add(dateTime); 
     }
+
     const uniqueDays = Array.from(arrDays); // TEGA UPORABLJAS 
-    
+    console.log(uniqueDays);
 
     for(var i=0; i<3; i++){
-
+        console.log(data);
+        if(i==0){
+            for(var j=0; j<24; j++){
+                arrTemps.push(dataHourly.temperature_2m[j])
+            }
+        }
+        else if(i==2){
+          for(var j=24; j<48; j++){
+                arrTemps.push(dataHourly.temperature_2m[j])
+            }  
+        }
+        else{
+            for(var j=48; j<72; j++){
+                arrTemps.push(dataHourly.temperature_2m[j])
+            }
+        }
+        var d= new Date(uniqueDays[i]); 
+        var dayName = days[d.getDay()]; 
         var element = document.createElement("div"); 
-        element.innerHTML = `<div class='dayText'> ${uniqueDays[i]} </div> <div class='tempText'> ${i}${data.hourly_units.temperature_2m}</div>`; 
+        element.innerHTML = `<div class='dayText'> ${dayName} </div> <div class='tempText'> ${Math.max(...arrTemps)}${data.hourly_units.temperature_2m}</div> <div class="secondaryText">${Math.min(...arrTemps)} </div>`; 
         element.setAttribute("class", "cardElement"); 
         contentArea.appendChild(element); 
+        arrTemps = []; 
     }
 }
 
