@@ -1,0 +1,32 @@
+body, html{
+    padding:0; 
+    margin:0; 
+}
+
+#contentArea{
+    display:flex; 
+}
+
+.cardElement{
+    border: 2px solid black; 
+    border-radius: 10%;
+    min-height: 150px;
+    width: 150px;  
+    box-shadow: 5px 5px lightgray;
+}
+
+.dayText{
+    align-items: center;
+    text-align: center;
+    font-weight: 800;
+}
+
+.tempText{
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    font-size: 2.5rem; 
+}
+
+
+
