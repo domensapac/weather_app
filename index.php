@@ -26,7 +26,7 @@
     </div>
 
 
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center" style="position:relative; bottom:0px;">
         <div class="col col-lg-2">
         </div>
         <div id="contentArea" class="col-md-auto">

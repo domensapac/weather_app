@@ -16,7 +16,7 @@ window.onload = () =>{
 }; 
 
 async function getCoords(){ //dobimo koordinate kraja
-    const name = 'Bodonci'; 
+    const name = 'Kranjska Gora'; 
     const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=1&language=en&format=json`
     const response = await fetch(apiUrl);
     let data = await response.json(); 
@@ -37,7 +37,7 @@ async function getCoords(){ //dobimo koordinate kraja
 async function getData(latitude, longitude){ //dobimo podatke za kraj
     const latVal = latitude; 
     const lonVal = longitude;
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&hourly=temperature_2m,precipitation_probability&timezone=Europe%2FBerlin&forecast_days=3`; 
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&current=temperature_2m,precipitation,is_day,apparent_temperature&timezone=Europe%2FBerlin`; 
     const response = await fetch(apiUrl); 
     let data = await response.json(); 
     outputDataConsole(data); 
@@ -67,41 +67,47 @@ function outputDataConsole(data){
 function displayData(data){
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const dataHourly = data.hourly; 
+    const dataDaily = data.daily;
+    const dataCurr = data.current;
     var arrDays = new Set();
-    var arrTemps = [];
     console.log(data); 
     for(var i=0; i< dataHourly.time.length ; i++){
         let dateTime = dataHourly.time[i].split("T")[0] ; 
         arrDays.add(dateTime); 
     }
-
     const uniqueDays = Array.from(arrDays); // TEGA UPORABLJAS 
-    console.log(uniqueDays);
 
-    for(var i=0; i<3; i++){
-        console.log(data);
-        if(i==0){
-            for(var j=0; j<24; j++){
-                arrTemps.push(dataHourly.temperature_2m[j])
-            }
+    for(var i=0; i<7; i++){
+        if(dataDaily.weather_code[i] == 0){
+            console.log("sonce"); 
         }
-        else if(i==2){
-          for(var j=24; j<48; j++){
-                arrTemps.push(dataHourly.temperature_2m[j])
-            }  
+        else if(dataDaily.weather_code[i] <10 && dataDaily.weather_code[i]>0){
+            console.log("partly cloudy"); 
         }
-        else{
-            for(var j=48; j<72; j++){
-                arrTemps.push(dataHourly.temperature_2m[j])
-            }
+        else if(dataDaily.weather_code[i]>=45 && dataDaily.weather_code[i]<50){
+            console.log("megla");
         }
+        else if(dataDaily.weather_code[i] >50 && dataDaily.weather_code[i]<= 61){
+            console.log("rosa / rahel dež"); 
+        }
+        else if((dataDaily.weather_code[i]>61 && dataDaily.weather_code[i]<70) || (dataDaily.weather_code[i]>=80 && dataDaily.weather_code[i]<=82)){
+            console.log("dež");
+        }
+        else if( (dataDaily.weather_code[i] > 70 && dataDaily.weather_code[i]< 80) || dataDaily.weather_code[i] == 86 || dataDaily.weather_code[i] ==85){
+            console.log("sneg");
+        }
+        else if(dataDaily.weather_code[i]>= 95 && dataDaily.weather_code[i]<100){
+            console.log("nevihta");
+        }
+
+    
         var d= new Date(uniqueDays[i]); 
         var dayName = days[d.getDay()]; 
         var element = document.createElement("div"); 
-        element.innerHTML = `<div class='dayText'> ${dayName} </div> <div class='tempText'> ${Math.max(...arrTemps)}${data.hourly_units.temperature_2m}</div> <div class="secondaryText">${Math.min(...arrTemps)} </div>`; 
-        element.setAttribute("class", "cardElement"); 
+        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${dayName}</h5> <p class='card-text'> ${dataDaily.temperature_2m_max[i]} / ${dataDaily.temperature_2m_min[i] }${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/sun.png' class='img-fluid weatherIcon' > </div>`; 
+        element.setAttribute("class", "card text-center mb-3"); 
+        element.setAttribute("style", "width:18rem");
         contentArea.appendChild(element); 
-        arrTemps = []; 
     }
 }
 
