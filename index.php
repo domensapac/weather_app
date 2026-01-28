@@ -14,15 +14,9 @@
     <div class="row">
         <div class="col-4 mt-5">
             <form id="weatherForm">
-                <input type="text" name="placeName" id="placeInput" placeholder="Search...">
-                <input type="submit" >
-            </form>
-            <div id="placeDisplay" class="mt-4">
-
-            </div>
-            <div id="tempDisplay" class="mt-2"> 
-
-            </div>
+                <input class="form-control" type="text" name="placeName" id="placeInput" placeholder="Search...">
+                <input class="btn btn-light"type="submit" >
+            </form> 
             
         </div>
         <div class="col-5">
@@ -31,6 +25,21 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-4 align-items-start">
+            <div id="placeDisplay" class="mt-4 ">
+            </div>
+            <div id="tempDisplay" class="mt-2"> 
+            </div>
+        </div>
+        <div class="col-5">
+        </div>
+        <div class="col-3 align-items-start">
+            <div id="otherDisplay" class="mt-4">
+
+            </div>
+        </div>
+    </div>
     
     <div class="row justify-content-md-center" >
         <div class="col col-lg-2">

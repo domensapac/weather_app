@@ -97,6 +97,12 @@ function writeTopLeft(name, temperature, unit){
     tempDisplay.innerHTML = `<span > ${temperature} ${unit}</span>`; 
 }
 
+function writeTopRight(humidity, windSpeed){
+    otherDisplay.innerHTML = `<div><i class="fa-solid fa-droplet"></i> <span> Relative humidity: ${humidity} </span> </div>
+   <div> <i class="fa-solid fa-wind"></i> <span> Wind speed: ${windSpeed} </span> </div>`;
+
+}
+
 function writeBottom(dataDaily, uniqueDays, days, data){
     const getIcon= (code) =>{
         const icons = {
@@ -166,6 +172,7 @@ function displayData(data){
 
     writeTopLeft(placeNameForDisplay, dataCurr.temperature_2m, data.hourly_units.temperature_2m); // IZPIŠE LEVI ZGORNJI DEL 
     writeBottom(dataDaily, uniqueDays, days ,data); //IZPIŠE GLAVNI DEL SPODAJ 
+    writeTopRight(dataCurr.relative_humidity_2m, dataCurr.wind_speed_10m);
 }
 
 
