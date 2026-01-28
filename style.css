@@ -1,8 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@100..900&display=swap');
+
 body, html{
     padding:0; 
     margin:0; 
 }
 
+body{
+    background-image: url(images/background.jpg);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    font-family: "Poppins", sans-serif !important;
+    font-weight: 800;
+}
 #contentArea{
     display:flex; 
     position:absolute;
@@ -39,7 +50,36 @@ body, html{
 }
 
 .weatherIcon{
-    width:50%;
+    width:30%;
 }
 
+#placeDisplay{
+    font-size:2rem; 
+    color:white;
+}
 
+#tempDisplay{
+    font-size:3rem; 
+    color:white; 
+}
+
+#otherDisplay{
+    
+}
+.card{
+    background-color:transparent !important;
+}
+
+.card-title{
+    color:white; 
+}
+
+.card-text{
+    color:white; 
+}
+
+.card:hover{
+    transform: scale(1.05); 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
+    z-index: 10; 
+}

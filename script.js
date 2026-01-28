@@ -8,7 +8,9 @@ var weatherForm;
 var placeInput;
 var placeDisplay; 
 var placeNameForDisplay; 
-
+var locationIcon; 
+var tempDisplay; 
+var otherDisplay;
 
 window.onload = () =>{
     //placeNameTxt = document.getElementById("placeName"); 
@@ -20,6 +22,10 @@ window.onload = () =>{
     weatherForm = document.getElementById("weatherForm"); 
     placeInput = document.getElementById("placeInput"); 
     placeDisplay = document.getElementById("placeDisplay"); 
+    locationIcon = document.getElementById("locationIcon"); 
+    tempDisplay = document.getElementById("tempDisplay"); 
+    otherDisplay = document.getElementById("otherDisplay"); 
+
     //getCoords(); 
 
     weatherForm.addEventListener('submit', function(event){
@@ -38,7 +44,7 @@ async function getCoords(name){ //dobimo koordinate kraja
     const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=1&language=en&format=json`
     const response = await fetch(apiUrl);
     let data = await response.json(); 
-    placeNameForDisplay= data.results[0].name;
+    placeNameForDisplay= data.results[0].name + ', ' + data.results[0].country;
 
     /*updateText(
         data.results[0].name,
@@ -48,8 +54,7 @@ async function getCoords(name){ //dobimo koordinate kraja
         data.results[0].longitude,
     )
     */
-   
-    
+
     getData(
         data.results[0].latitude,
         data.results[0].longitude,
@@ -57,9 +62,10 @@ async function getCoords(name){ //dobimo koordinate kraja
 }
 
 async function getData(latitude, longitude){ //dobimo podatke za kraj
+    contentArea.innerHTML = "<div class='d-flex justify-content-center'><div class='spinner-border' role='status'><span class='visually-hidden'>Loading...</span></div></div>" ; 
     const latVal = latitude; 
     const lonVal = longitude;
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&current=temperature_2m,precipitation,is_day,apparent_temperature&timezone=Europe%2FBerlin`; 
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&current=temperature_2m,is_day,apparent_temperature,wind_speed_10m,relative_humidity_2m,rain,precipitation&timezone=Europe%2FBerlin&forecast_days=7`; 
     const response = await fetch(apiUrl); 
     let data = await response.json(); 
     outputDataConsole(data); 
@@ -86,36 +92,26 @@ function outputDataConsole(data){
     }
 }
 
-function displayData(data){
-    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const dataHourly = data.hourly; 
-    const dataDaily = data.daily;
-    const dataCurr = data.current;
-    
-    var arrDays = new Set();
-    console.log(data); 
-    for(var i=0; i< dataHourly.time.length ; i++){
-        let dateTime = dataHourly.time[i].split("T")[0] ; 
-        arrDays.add(dateTime); 
-    }
-    const uniqueDays = Array.from(arrDays); // TEGA UPORABLJAS 
-    var weatherCode;
+function writeTopLeft(name, temperature, unit){
+    placeDisplay.innerHTML = ` <i class='fa-solid fa-location-crosshairs'></i> <span > ${name} </span>`;
+    tempDisplay.innerHTML = `<span > ${temperature} ${unit}</span>`; 
+}
 
-    placeDisplay.innerHTML = `<h2> ${placeNameForDisplay} </h2>`;
-
+function writeBottom(dataDaily, uniqueDays, days, data){
     const getIcon= (code) =>{
-            const icons = {
-                0: "sun.png",
-                1: "cloudy.png",
-                2: "cloudy_fully.png",
-                3: "fog.png",
-                4: "light_rainy.png",
-                5: "rainy.png",
-                6: "snowy.png",
-                7: "thunderstorm.png"
-            };
-            return icons[code];
+        const icons = {
+            0: "sun.png",
+            1: "cloudy.png",
+            2: "cloudy_fully.png",
+            3: "fog.png",
+            4: "light_rainy.png",
+            5: "rainy.png",
+            6: "snowy.png",
+            7: "thunderstorm.png"
         };
+        return icons[code];
+    };
+    var weatherCode;
     for(var i=0; i<7; i++){
         if(dataDaily.weather_code[i] == 0){
             weatherCode=0;
@@ -145,10 +141,32 @@ function displayData(data){
         var d= new Date(uniqueDays[i]); 
         var dayName = days[d.getDay()]; 
         var element = document.createElement("div"); 
-        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${dayName}</h5> <p class='card-text'> ${dataDaily.temperature_2m_max[i]} / ${dataDaily.temperature_2m_min[i] }${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(weatherCode)}' class='img-fluid weatherIcon' > </div>`; 
+        element.innerHTML = `<div class='card-body '> <h5 class='card-title'> ${dayName}</h5> <p class='card-text'> ${dataDaily.temperature_2m_max[i]} / ${dataDaily.temperature_2m_min[i] }${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(weatherCode)}' class='img-fluid weatherIcon' > </div>`; 
         element.setAttribute("class", "card text-center mb-3"); 
-        element.setAttribute("style", "width:18rem");
+        element.setAttribute("style", "width:12rem");
+        weatherForm.setAttribute("style", "visibility:hidden"); 
         contentArea.appendChild(element); 
     }
 }
+
+function displayData(data){
+    contentArea.innerHTML = ""; 
+    const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dataHourly = data.hourly; 
+    const dataDaily = data.daily;
+    const dataCurr = data.current;
+    
+    var arrDays = new Set();
+    console.log(data); 
+    for(var i=0; i< dataHourly.time.length ; i++){
+        let dateTime = dataHourly.time[i].split("T")[0] ; 
+        arrDays.add(dateTime); 
+    }
+    const uniqueDays = Array.from(arrDays); // TEGA UPORABLJAS 
+
+    writeTopLeft(placeNameForDisplay, dataCurr.temperature_2m, data.hourly_units.temperature_2m); // IZPIŠE LEVI ZGORNJI DEL 
+    writeBottom(dataDaily, uniqueDays, days ,data); //IZPIŠE GLAVNI DEL SPODAJ 
+}
+
+
 
