@@ -4,11 +4,6 @@
 //var latitudeTxt;
 //var longitudeTxt; 
 var contentArea; 
-var weatherForm; 
-var placeInput;
-var placeDisplay; 
-var placeNameForDisplay; 
-
 
 window.onload = () =>{
     //placeNameTxt = document.getElementById("placeName"); 
@@ -16,30 +11,15 @@ window.onload = () =>{
     //elevationTxt = document.getElementById("elevation");
     //latitudeTxt = document.getElementById("latitude");
     //longitudeTxt = document.getElementById("longitude");
-    contentArea = document.getElementById("contentArea");
-    weatherForm = document.getElementById("weatherForm"); 
-    placeInput = document.getElementById("placeInput"); 
-    placeDisplay = document.getElementById("placeDisplay"); 
-    //getCoords(); 
-
-    weatherForm.addEventListener('submit', function(event){
-        event.preventDefault();
-        const placeName = placeInput.value;
-        getCoords(placeName);
-        placeInput.value = "";
-    });
-
+    contentArea = document.getElementById("contentArea"); 
+    getCoords(); 
 }; 
 
-
-
-
-async function getCoords(name){ //dobimo koordinate kraja
+async function getCoords(){ //dobimo koordinate kraja
+    const name = 'Murska Sobota'; 
     const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=1&language=en&format=json`
     const response = await fetch(apiUrl);
     let data = await response.json(); 
-    placeNameForDisplay= data.results[0].name;
-
     /*updateText(
         data.results[0].name,
         data.results[0].admin1,
@@ -49,7 +29,6 @@ async function getCoords(name){ //dobimo koordinate kraja
     )
     */
    
-    
     getData(
         data.results[0].latitude,
         data.results[0].longitude,
@@ -101,9 +80,41 @@ function displayData(data){
     const uniqueDays = Array.from(arrDays); // TEGA UPORABLJAS 
     var weatherCode;
 
-    placeDisplay.innerHTML = `<h2> ${placeNameForDisplay} </h2>`;
+    for(var i=0; i<7; i++){
+        if(dataDaily.weather_code[i] == 0){
+            console.log("sun"); 
+            weatherCode=0;
+        }
+        else if(dataDaily.weather_code[i] == 2){
+            console.log("partly cloudy"); 
+            weatherCode=1;
+        }
+        else if(dataDaily.weather_code[i] ==3){
+            console.log("cloudy"); 
+            weatherCode=2;
+        }
+        else if(dataDaily.weather_code[i]>=45 && dataDaily.weather_code[i]<50){
+            console.log("fog");
+            weatherCode=3;
+        }
+        else if(dataDaily.weather_code[i] >50 && dataDaily.weather_code[i]<= 61){
+            console.log("light rainy"); 
+            weatherCode=4;
+        }
+        else if((dataDaily.weather_code[i]>61 && dataDaily.weather_code[i]<70) || (dataDaily.weather_code[i]>=80 && dataDaily.weather_code[i]<=82)){
+            console.log("rain");
+            weatherCode=5;
+        }
+        else if( (dataDaily.weather_code[i] > 70 && dataDaily.weather_code[i]< 80) || dataDaily.weather_code[i] == 86 || dataDaily.weather_code[i] ==85){
+            console.log("snowy");
+            weatherCode=6;
+        }
+        else if(dataDaily.weather_code[i]>= 95 && dataDaily.weather_code[i]<100){
+            console.log("thunderstorm");
+            weatherCode=7;
+        }
 
-    const getIcon= (code) =>{
+        const getIcon= (code) =>{
             const icons = {
                 0: "sun.png",
                 1: "cloudy.png",
@@ -116,31 +127,6 @@ function displayData(data){
             };
             return icons[code];
         };
-    for(var i=0; i<7; i++){
-        if(dataDaily.weather_code[i] == 0){
-            weatherCode=0;
-        }
-        else if(dataDaily.weather_code[i] == 2){
-            weatherCode=1;
-        }
-        else if(dataDaily.weather_code[i] ==3){
-            weatherCode=2;
-        }
-        else if(dataDaily.weather_code[i]>=45 && dataDaily.weather_code[i]<50){
-            weatherCode=3;
-        }
-        else if(dataDaily.weather_code[i] >50 && dataDaily.weather_code[i]<= 61){
-            weatherCode=4;
-        }
-        else if((dataDaily.weather_code[i]>61 && dataDaily.weather_code[i]<70) || (dataDaily.weather_code[i]>=80 && dataDaily.weather_code[i]<=82)){
-            weatherCode=5;
-        }
-        else if( (dataDaily.weather_code[i] > 70 && dataDaily.weather_code[i]< 80) || dataDaily.weather_code[i] == 86 || dataDaily.weather_code[i] ==85){
-            weatherCode=6;
-        }
-        else if(dataDaily.weather_code[i]>= 95 && dataDaily.weather_code[i]<100){
-            weatherCode=7;
-        }
 
         var d= new Date(uniqueDays[i]); 
         var dayName = days[d.getDay()]; 

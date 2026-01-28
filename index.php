@@ -11,22 +11,23 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-3">
-            
+        <div class="col-3 mt-5">
+            <form id="weatherForm">
+                <input type="text" name="placeName" id="placeInput" placeholder="Search...">
+                <input type="submit" >
+            </form>
+            <div id="placeDisplay" class="mt-4">
+
+            </div>
         </div>
         <div class="col-6">
-            <h3 id="placeName"></h3>
-            <h3 id="municipality"></h3>
-            <h3 id="elevation"></h3>
-            <h3 id="latitude"></h3>
-            <h3 id="longitude"></h3>
         </div>
         <div class="col-3">
         </div>
     </div>
 
 
-    <div class="row justify-content-md-center" style="position:relative; bottom:0px;">
+    <div class="row justify-content-md-center" >
         <div class="col col-lg-2">
         </div>
         <div id="contentArea" class="col-md-auto">
@@ -44,6 +45,8 @@
         <div class="col col-lg-2">
         </div>
     </div>
+
+
 </div>
 
 
