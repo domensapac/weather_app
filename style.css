@@ -15,7 +15,6 @@ body{
     font-weight: 800;
 }
 #contentArea{
-    display:flex; 
     position:absolute;
     bottom: 0;
 }
@@ -83,4 +82,10 @@ body{
     transform: scale(1.05); 
     box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
     z-index: 10; 
+    cursor: pointer;
 }
+
+#hourlyView{
+    display:none;
+}
+

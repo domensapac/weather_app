@@ -13,15 +13,11 @@
 <div class="container">
     <div class="row">
         <div class="col-4 mt-5">
-            <form id="weatherForm">
-                <input class="form-control" type="text" name="placeName" id="placeInput" placeholder="Search...">
-                <input class="btn btn-light"type="submit" >
-            </form> 
+        </div>
+        <div class="col-4">
             
         </div>
-        <div class="col-5">
-        </div>
-        <div class="col-3 mt-5">
+        <div class="col-4 mt-5">
         </div>
     </div>
 
@@ -31,32 +27,33 @@
             </div>
             <div id="tempDisplay" class="mt-2"> 
             </div>
+            <div id="appTempDisplay" class="mt-2">
+            </div>
         </div>
         <div class="col-5">
+            <form id="weatherForm">
+                <input class="form-control" type="text" name="placeName" id="placeInput" placeholder="Search...">
+                <input class="btn btn-light"type="submit" >
+            </form> 
         </div>
         <div class="col-3 align-items-start">
             <div id="otherDisplay" class="mt-4">
-
             </div>
         </div>
     </div>
     
     <div class="row justify-content-md-center" >
-        <div class="col col-lg-2">
-        </div>
-        <div id="contentArea" class="col-md-auto mb-5">
-            <!--
-            <div class="cardElement">
-                <div class="dayText">
-                    <span>Ponedeljek</span>
+        <div id="contentArea" class="col-12 mb-5">
+            <div id="dailyView" class="d-flex overflow-auto justify-content-center ">
+
+            </div>
+            <div id="hourlyView"  class="overflow-auto justify-content-center ">
+                <div> 
+                    <button id="backBtn" style="height:50%" class="btn btn-outline-light mb-3">← Nazaj</button>
                 </div>
-                <div class="tempText">
-                    <span>3°C</span>
+                <div id="hourlyCards" class="d-flex overflow-auto">
                 </div>
             </div>
-        -->
-        </div>
-        <div class="col col-lg-2">
         </div>
     </div>
 
