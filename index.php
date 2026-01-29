@@ -47,19 +47,16 @@
             <div id="dailyView" class="d-flex overflow-auto justify-content-center ">
 
             </div>
-            <div id="hourlyView"  class="overflow-auto justify-content-center ">
+            <div id="hourlyView"  class="overflow-auto justify-content-center flex-column">
                 <div> 
-                    <button id="backBtn" style="height:50%" class="btn btn-outline-light mb-3">← Nazaj</button>
+                    <button id="backBtn" style="height:50%" class="btn btn-outline-light mb-3"><i class="fa-solid fa-backward"></i></button>
                 </div>
                 <div id="hourlyCards" class="d-flex overflow-auto">
                 </div>
             </div>
         </div>
     </div>
-
-
 </div>
-
 
 
 

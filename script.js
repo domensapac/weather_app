@@ -80,7 +80,7 @@ async function getData(latitude, longitude){ //dobimo podatke za kraj
     dailyView.innerHTML = "<div class='d-flex justify-content-center'><div class='spinner-border' role='status'><span class='visually-hidden'>Loading...</span></div></div>" ; 
     const latVal = latitude; 
     const lonVal = longitude;
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&current=temperature_2m,is_day,apparent_temperature,wind_speed_10m,relative_humidity_2m,rain,precipitation&timezone=Europe%2FBerlin&forecast_days=7`; 
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&current=temperature_2m,is_day,apparent_temperature,wind_speed_10m,relative_humidity_2m,rain,precipitation,surface_pressure&timezone=Europe%2FBerlin&forecast_days=7`; 
     const response = await fetch(apiUrl); 
     let data = await response.json(); 
     outputDataConsole(data); 
@@ -113,9 +113,10 @@ function writeTopLeft(name, temperature, apparent, unit){
 
 }
 
-function writeTopRight(humidity, windSpeed, unitHumidity, unitWind){
+function writeTopRight(humidity, windSpeed, pressure, pressureUnit, unitHumidity, unitWind){
     otherDisplay.innerHTML = `<div class='mt-2'><i class="fa-solid fa-droplet"></i> <span> Humidity: ${humidity} ${unitHumidity}</span> </div>
-   <div class='mt-2'> <i class="fa-solid fa-wind"></i> <span> Wind speed: ${windSpeed} ${unitWind}</span> </div>`;
+   <div class='mt-2'> <i class="fa-solid fa-wind"></i> <span> Wind speed: ${windSpeed} ${unitWind}</span> </div>
+   <div class='mt-2'><i class="fa-brands fa-cloudflare"></i><span> ${pressure} ${pressureUnit}</span> </div>`;
 
 }
 
@@ -134,8 +135,9 @@ function writeBottom(dataDaily, uniqueDays, days, data){
         return icons[code];
     };
     var weatherCode;
+    
     for(var i=0; i<7; i++){
-        if(dataDaily.weather_code[i] == 0){
+        if(dataDaily.weather_code[i] == 0 || dataDaily.weather_code[i] == 1){
             weatherCode=0;
         }
         else if(dataDaily.weather_code[i] == 2){
@@ -173,6 +175,7 @@ function writeBottom(dataDaily, uniqueDays, days, data){
         }); 
         weatherForm.setAttribute("style", "visibility:hidden"); 
         dailyView.appendChild(element); 
+        console.log(weatherCode);
     }
 }
 
@@ -182,7 +185,7 @@ function displayData(data){
     const dataHourly = data.hourly; 
     const dataDaily = data.daily;
     const dataCurr = data.current;
-    
+
     var arrDays = new Set();
     console.log(data); 
     for(var i=0; i< dataHourly.time.length ; i++){
@@ -194,7 +197,7 @@ function displayData(data){
 
     writeTopLeft(placeNameForDisplay, dataCurr.temperature_2m, dataCurr.apparent_temperature, data.hourly_units.temperature_2m); // IZPIŠE LEVI ZGORNJI DEL 
     writeBottom(dataDaily, uniqueDays, days ,data); //IZPIŠE GLAVNI DEL SPODAJ 
-    writeTopRight(dataCurr.relative_humidity_2m, dataCurr.wind_speed_10m, data.current_units.relative_humidity_2m, data.current_units.wind_speed_10m);
+    writeTopRight(dataCurr.relative_humidity_2m, dataCurr.wind_speed_10m,dataCurr.surface_pressure, data.current_units.surface_pressure, data.current_units.relative_humidity_2m, data.current_units.wind_speed_10m);
 }
 
 function displayHourlyData(data, uniqueDays, index){
@@ -208,8 +211,8 @@ function displayHourlyData(data, uniqueDays, index){
 }
 
 function writeDailyCards(dataHourly, date){
-    hourlyCards.innerHTML = ""; 
-    for(var i=0; i<7; i++){
+    hourlyCards.innerHTML = " "; 
+    for(var i=0; i<9; i++){
         var element = document.createElement("div"); 
         element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${i}</h5> <p class='card-text'> ${i} / ${i }${i} </p> <img alt='picture' src='images/' class='img-fluid weatherIcon' > </div>`; 
         element.setAttribute("class", "card text-center mb-3"); 
