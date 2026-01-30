@@ -143,19 +143,19 @@ function writeBottom(dataDaily, uniqueDays, days, data){
         else if(dataDaily.weather_code[i] == 2){
             weatherCode=1;
         }
-        else if(dataDaily.weather_code[i] ==3){
+        else if(dataDaily.weather_code[i] == 3){
             weatherCode=2;
         }
-        else if(dataDaily.weather_code[i]>=45 && dataDaily.weather_code[i]<50){
+        else if(dataDaily.weather_code[i] == 45 || dataDaily.weather_code[i] == 48){
             weatherCode=3;
         }
-        else if(dataDaily.weather_code[i] >50 && dataDaily.weather_code[i]<= 61){
+        else if(dataDaily.weather_code[i] >= 51 && dataDaily.weather_code[i]<= 61 || dataDaily.weather_code[i] == 80 || dataDaily.weather_code[i] == 81){
             weatherCode=4;
         }
-        else if((dataDaily.weather_code[i]>61 && dataDaily.weather_code[i]<70) || (dataDaily.weather_code[i]>=80 && dataDaily.weather_code[i]<=82)){
+        else if((dataDaily.weather_code[i] == 82)){
             weatherCode=5;
         }
-        else if( (dataDaily.weather_code[i] > 70 && dataDaily.weather_code[i]< 80) || dataDaily.weather_code[i] == 86 || dataDaily.weather_code[i] ==85){
+        else if( (dataDaily.weather_code[i] >= 71 && dataDaily.weather_code[i]<= 77) || dataDaily.weather_code[i] == 85 || dataDaily.weather_code[i] == 86){
             weatherCode=6;
         }
         else if(dataDaily.weather_code[i]>= 95 && dataDaily.weather_code[i]<100){
@@ -175,7 +175,6 @@ function writeBottom(dataDaily, uniqueDays, days, data){
         }); 
         weatherForm.setAttribute("style", "visibility:hidden"); 
         dailyView.appendChild(element); 
-        console.log(weatherCode);
     }
 }
 
@@ -205,12 +204,13 @@ function displayHourlyData(data, uniqueDays, index){
     dailyView.setAttribute("style", "display:none !important"); 
     hourlyView.setAttribute("style", "display:flex"); 
     if(index!=0){ // ZA DANES JE LOGIKA DRUGAČNA
-        writeDailyCards(data, selectedDate); 
+        writeDailyCards(data, selectedDate, arrDays); 
     }
-
 }
 
-function writeDailyCards(dataHourly, date){
+function writeDailyCards(data, selectedDate, datesNoTime){
+    
+    console.log(datesNoTime.indexOf(selectedDate))
     hourlyCards.innerHTML = " "; 
     for(var i=0; i<9; i++){
         var element = document.createElement("div"); 
