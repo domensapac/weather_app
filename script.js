@@ -204,13 +204,18 @@ function displayHourlyData(data, uniqueDays, index){
     dailyView.setAttribute("style", "display:none !important"); 
     hourlyView.setAttribute("style", "display:flex"); 
     if(index!=0){ // ZA DANES JE LOGIKA DRUGAČNA
-        writeDailyCards(data, selectedDate, arrDays); 
+        writeDailyCards(data, selectedDate); 
     }
 }
 
-function writeDailyCards(data, selectedDate, datesNoTime){
-    
-    console.log(datesNoTime.indexOf(selectedDate))
+function writeDailyCards(data, selectedDate){
+    for(var i=0; i<data.hourly.time.length; i++){
+        if(selectedDate == data.hourly.time[i].split("T")[0]){
+            console.log(i);
+            break;
+        }
+    }
+    //console.log(datesNoTime.indexOf(selectedDate))
     hourlyCards.innerHTML = " "; 
     for(var i=0; i<9; i++){
         var element = document.createElement("div"); 
