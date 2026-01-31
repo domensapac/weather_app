@@ -63,7 +63,7 @@ body{
 }
 
 #otherDisplay{
-    font-size: 1.5rem;
+    font-size: 2rem;
     color:white;
 }
 .card{
@@ -79,13 +79,18 @@ body{
 }
 
 .card:hover{
-    transform: scale(1.05); 
+    transform: scale(1.15); 
     box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
     z-index: 10; 
     cursor: pointer;
+    transition: 75ms ease;
 }
 
 #hourlyView{
     display:none;
 }
 
+#appTempDisplay{
+    color:rgb(170, 167, 167);
+    font-style: italic;
+}

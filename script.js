@@ -115,13 +115,12 @@ function writeTopLeft(name, temperature, apparent, unit){
 
 function writeTopRight(humidity, windSpeed, pressure, pressureUnit, unitHumidity, unitWind){
     otherDisplay.innerHTML = `<div class='mt-2'><i class="fa-solid fa-droplet"></i> <span> Humidity: ${humidity} ${unitHumidity}</span> </div>
-   <div class='mt-2'> <i class="fa-solid fa-wind"></i> <span> Wind speed: ${windSpeed} ${unitWind}</span> </div>
-   <div class='mt-2'><i class="fa-brands fa-cloudflare"></i><span> ${pressure} ${pressureUnit}</span> </div>`;
+   <div class='mt-4 mb-4'> <i class="fa-solid fa-wind"></i> <span> Wind speed: ${windSpeed} ${unitWind}</span> </div>
+   <div class='mt-4 mb-4'><i class="fa-brands fa-cloudflare"></i><span> Air pressure: ${pressure} ${pressureUnit}</span> </div>`;
 
 }
 
-function writeBottom(dataDaily, uniqueDays, days, data){
-    const getIcon= (code) =>{
+const getIcon= (code) =>{
         const icons = {
             0: "sun.png",
             1: "cloudy.png",
@@ -130,42 +129,49 @@ function writeBottom(dataDaily, uniqueDays, days, data){
             4: "light_rainy.png",
             5: "rainy.png",
             6: "snowy.png",
-            7: "thunderstorm.png"
+            7: "thunderstorm.png",
+            8: "moon.png"
         };
         return icons[code];
-    };
-    var weatherCode;
-    
-    for(var i=0; i<7; i++){
-        if(dataDaily.weather_code[i] == 0 || dataDaily.weather_code[i] == 1){
-            weatherCode=0;
-        }
-        else if(dataDaily.weather_code[i] == 2){
-            weatherCode=1;
-        }
-        else if(dataDaily.weather_code[i] == 3){
-            weatherCode=2;
-        }
-        else if(dataDaily.weather_code[i] == 45 || dataDaily.weather_code[i] == 48){
-            weatherCode=3;
-        }
-        else if(dataDaily.weather_code[i] >= 51 && dataDaily.weather_code[i]<= 61 || dataDaily.weather_code[i] == 80 || dataDaily.weather_code[i] == 81){
-            weatherCode=4;
-        }
-        else if((dataDaily.weather_code[i] == 82)){
-            weatherCode=5;
-        }
-        else if( (dataDaily.weather_code[i] >= 71 && dataDaily.weather_code[i]<= 77) || dataDaily.weather_code[i] == 85 || dataDaily.weather_code[i] == 86){
-            weatherCode=6;
-        }
-        else if(dataDaily.weather_code[i]>= 95 && dataDaily.weather_code[i]<100){
-            weatherCode=7;
-        }
+};
 
+function proccessWeatherCode(weatherCode){
+    console.log(weatherCode); 
+    var pictureCode;
+    if(weatherCode == 0 || weatherCode == 1)
+    {
+        pictureCode=0;
+    }
+    else if(weatherCode == 2){
+        pictureCode=1;
+    }
+    else if(weatherCode == 3){
+        pictureCode=2;
+    }
+    else if(weatherCode == 45 || weatherCode == 48){
+        pictureCode=3;
+    }
+    else if(weatherCode >= 51 && weatherCode<= 61 || weatherCode == 80 || weatherCode == 81){
+        pictureCode=4;
+    }
+    else if((weatherCode == 82) || weatherCode == 63){
+        pictureCode=5;
+    }
+    else if((weatherCode >= 71 && weatherCode<= 77) || weatherCode == 85 || weatherCode == 86){
+        pictureCode=6;
+    }
+    else if(weatherCode>= 95 && weatherCode<100){
+        pictureCode=7;
+    }
+    return pictureCode;
+}
+
+function writeBottom(dataDaily, uniqueDays, days, data){
+    for(var i=0; i<7; i++){
         var d= new Date(uniqueDays[i]); 
         var dayName = days[d.getDay()]; 
         var element = document.createElement("div"); 
-        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${dayName}</h5> <p class='card-text'> ${dataDaily.temperature_2m_max[i]} / ${dataDaily.temperature_2m_min[i] }${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(weatherCode)}' class='img-fluid weatherIcon' > </div>`; 
+        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${dayName}</h5> <p class='card-text'> ${dataDaily.temperature_2m_max[i]} / ${dataDaily.temperature_2m_min[i] }${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.daily.weather_code[i]))}' class='img-fluid weatherIcon' > </div>`; 
         element.setAttribute("class", "card text-center mb-3"); 
         element.setAttribute("id", i); 
         element.setAttribute("style", "width:12rem");
@@ -209,17 +215,20 @@ function displayHourlyData(data, uniqueDays, index){
 }
 
 function writeDailyCards(data, selectedDate){
+    let dayIndex= -1; 
+    let index= -1; 
     for(var i=0; i<data.hourly.time.length; i++){
         if(selectedDate == data.hourly.time[i].split("T")[0]){
-            console.log(i);
+            dayIndex = i ;
+            console.log(dayIndex);
             break;
         }
     }
-    //console.log(datesNoTime.indexOf(selectedDate))
     hourlyCards.innerHTML = " "; 
-    for(var i=0; i<9; i++){
+    for(var i=0; i<12; i++){
+        index= dayIndex + i*2; 
         var element = document.createElement("div"); 
-        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${i}</h5> <p class='card-text'> ${i} / ${i }${i} </p> <img alt='picture' src='images/' class='img-fluid weatherIcon' > </div>`; 
+        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${data.hourly.time[index].split("T")[1]}</h5> <p class='card-text'> ${data.hourly.temperature_2m[index]}${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.hourly.weather_code[index]))}' class='img-fluid weatherIcon' > </div>`; 
         element.setAttribute("class", "card text-center mb-3"); 
         element.setAttribute("style", "width:12rem");
         hourlyCards.appendChild(element); 
