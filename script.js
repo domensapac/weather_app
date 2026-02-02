@@ -17,6 +17,9 @@ var dailyView;
 var hourlyView; 
 var hourlyCards; 
 var backBtn; 
+var locationIcon; 
+var inputContainer; 
+var mainContainer; 
 
 window.onload = () =>{
     //placeNameTxt = document.getElementById("placeName"); 
@@ -37,6 +40,10 @@ window.onload = () =>{
     hourlyView = document.getElementById("hourlyView"); 
     backBtn = document.getElementById("backBtn"); 
     hourlyCards = document.getElementById("hourlyCards"); 
+    inputContainer = document.getElementById("inputContainer"); 
+    mainContainer = document.getElementById("mainContainer"); 
+    mainContainer.setAttribute("style", "display: none !important"); 
+
     //getCoords(); 
 
     weatherForm.addEventListener('submit', function(event){
@@ -44,16 +51,17 @@ window.onload = () =>{
         const placeName = placeInput.value;
         getCoords(placeName);
         placeInput.value = "";
+        inputContainer.setAttribute("style", "display: none !important"); 
+        mainContainer.setAttribute("style", "display: flex !important"); 
+
     }); 
 
     backBtn.addEventListener('click', () =>{
         hourlyView.setAttribute("style", "display:none"); 
         dailyView.setAttribute("style", "display:flex"); 
     }); 
+
 }; 
-
-
-
 
 async function getCoords(name){ //dobimo koordinate kraja
     const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=1&language=en&format=json`
@@ -107,10 +115,11 @@ function outputDataConsole(data){
 }
 
 function writeTopLeft(name, temperature, apparent, unit){
-    placeDisplay.innerHTML = ` <i class='fa-solid fa-location-crosshairs'></i> <span > ${name} </span>`;
+    placeDisplay.innerHTML = ` <i class="fa-solid fa-location-dot me-2" id='locationIcon'></i><span>${name}</span>`;
     tempDisplay.innerHTML = `<span > ${temperature} ${unit}</span>`
     appTempDisplay.innerHTML =  `<span> Feels like ${apparent} ${unit} </span>`; 
 
+    placeDisplay.addEventListener('click', changeLocation);
 }
 
 function writeTopRight(humidity, windSpeed, pressure, pressureUnit, unitHumidity, unitWind){
@@ -184,7 +193,6 @@ function writeBottom(dataDaily, uniqueDays, days, data){
             const clickedID = event.currentTarget.id; 
             displayHourlyData(data, uniqueDays, clickedID); 
         }); 
-        weatherForm.setAttribute("style", "visibility:hidden"); 
         dailyView.appendChild(element); 
     }
 }
@@ -218,7 +226,6 @@ function displayHourlyData(data, uniqueDays, index){
 }
 
 function writeHourlyCards(data, selectedDate, dateIndex){
-    console.log(dateIndex);
     let dayIndex= -1; 
     let index= -1; 
     for(var i=0; i<data.hourly.time.length; i++){
@@ -228,15 +235,16 @@ function writeHourlyCards(data, selectedDate, dateIndex){
         }
     }
 
-    
     hourlyCards.innerHTML = " "; 
+    hourlyCards.scrollLeft = 0; 
+    dailyView.scrollLeft = 0; 
     if(dateIndex!=0 && dateIndex>0){
         for(var i=0; i<12; i++){
             index= dayIndex + i*2; 
             var element = document.createElement("div");        
             element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${data.hourly.time[index].split("T")[1]}</h5> <p class='card-text'> ${data.hourly.temperature_2m[index]}${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.hourly.weather_code[index]),data.hourly.is_day[index] )}' class='img-fluid weatherIcon' > </div>`; 
             element.setAttribute("class", "card text-center mb-3"); 
-            element.setAttribute("style", "width:12rem");
+            element.style.minWidth = "120px";
             hourlyCards.appendChild(element); 
         }
     }
@@ -249,11 +257,15 @@ function writeHourlyCards(data, selectedDate, dateIndex){
             var element = document.createElement("div");        
             element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${data.hourly.time[index].split("T")[1]}</h5> <p class='card-text'> ${data.hourly.temperature_2m[index]}${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.hourly.weather_code[index]),data.hourly.is_day[index] )}' class='img-fluid weatherIcon' > </div>`; 
             element.setAttribute("class", "card text-center mb-3"); 
-            element.setAttribute("style", "width:12rem");
+            element.style.minWidth = "120px";
             hourlyCards.appendChild(element); 
         }
     }
 }
 
+function changeLocation(){
+    inputContainer.setAttribute("style", "display: flex !important"); 
+    mainContainer.setAttribute("style", "display: flex !important"); 
+}
 
 

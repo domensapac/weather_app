@@ -15,9 +15,6 @@ body{
     font-family: "Poppins", sans-serif !important;
     font-weight: 800;
 }
-#contentArea{
-
-}
 
 .dayText{
     align-items: center;
@@ -46,6 +43,20 @@ body{
 #placeDisplay{
     font-size:2rem; 
     color:white;
+}
+
+#placeDisplay:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+#placeDisplay:hover #locationIcon {
+    transform: rotate(360deg);
+}
+
+#locationIcon {
+    display: inline-block;
+    transition: transform 0.5s ease-in-out;
 }
 
 #tempDisplay{
@@ -86,6 +97,11 @@ body{
     color:rgb(170, 167, 167);
     font-style: italic;
 }
+
+#inputContainer{
+    backdrop-filter: blur(15px);
+}
+
 
 @media (max-width: 1250px) {
     #otherDisplay, #placeDisplay{

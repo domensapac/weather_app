@@ -10,8 +10,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+<div class="min-vh-100 d-flex justify-content-center align-items-center" id="inputContainer">
+    <form id="weatherForm">
+        <input class="form-control" type="text" name="placeName" id="placeInput" placeholder="Search...">
+        <input class="btn btn-light"type="submit" >
+    </form> 
+</div>
 
-<div class="container d-flex flex-column min-vh-100">
+<div class="container d-flex flex-column min-vh-100" id="mainContainer">
     <div class="row">
         <div class="col-4 mt-5">
         </div>
@@ -32,10 +38,7 @@
             </div>
         </div>
         <div class="col-5">
-            <form id="weatherForm">
-                <input class="form-control" type="text" name="placeName" id="placeInput" placeholder="Search...">
-                <input class="btn btn-light"type="submit" >
-            </form> 
+            
         </div>
         <div class="col-3 align-items-start">
             <div id="otherDisplay" class="mt-4">
@@ -46,14 +49,14 @@
 
     <div class="row mt-auto justify-content-md-center" >
         <div id="contentArea" class="col-12 mb-5">
-            <div id="dailyView" class="d-flex overflow-x-auto justify-content-md-center custom-scrollbar py-3">
+            <div id="dailyView" class="d-flex overflow-x-auto custom-scrollbar py-3">
 
             </div>
             <div id="hourlyView"  class="overflow-scroll justify-content-center flex-column">
                 <div> 
                     <button id="backBtn" style="height:50%" class="btn btn-outline-light mb-3"><i class="fa-solid fa-backward"></i></button>
                 </div>
-                <div id="hourlyCards" class="d-flex overflow-x-auto justify-content-md-center custom-scrollbar py-3">
+                <div id="hourlyCards" class="d-flex overflow-x-auto custom-scrollbar py-3">
                 </div>
             </div>
         </div>
