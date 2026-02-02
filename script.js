@@ -80,7 +80,7 @@ async function getData(latitude, longitude){ //dobimo podatke za kraj
     dailyView.innerHTML = "<div class='d-flex justify-content-center'><div class='spinner-border' role='status'><span class='visually-hidden'>Loading...</span></div></div>" ; 
     const latVal = latitude; 
     const lonVal = longitude;
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code&current=temperature_2m,is_day,apparent_temperature,wind_speed_10m,relative_humidity_2m,rain,precipitation,surface_pressure&timezone=Europe%2FBerlin&forecast_days=7`; 
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,is_day&current=temperature_2m,is_day,apparent_temperature,wind_speed_10m,relative_humidity_2m,rain,precipitation,surface_pressure&timezone=Europe%2FBerlin&forecast_days=7`; 
     const response = await fetch(apiUrl); 
     let data = await response.json(); 
     outputDataConsole(data); 
@@ -120,23 +120,28 @@ function writeTopRight(humidity, windSpeed, pressure, pressureUnit, unitHumidity
 
 }
 
-const getIcon= (code) =>{
-        const icons = {
-            0: "sun.png",
-            1: "cloudy.png",
-            2: "cloudy_fully.png",
-            3: "fog.png",
-            4: "light_rainy.png",
-            5: "rainy.png",
-            6: "snowy.png",
-            7: "thunderstorm.png",
-            8: "moon.png"
-        };
-        return icons[code];
+const getIcon= (code, isDay) =>{
+
+    if(isDay == 0 && (code == 0 || code == 1) ){
+        return "moon.png";
+    }
+    if(isDay == 0 && code == 2){
+        return "cloudy_moon.png";
+    }
+    const icons = {
+        0: "sun.png",
+        1: "cloudy.png",
+        2: "cloudy_fully.png",
+        3: "fog.png",
+        4: "light_rainy.png",
+        5: "rainy.png",
+        6: "snowy.png",
+        7: "thunderstorm.png",
+    };
+    return icons[code];
 };
 
 function proccessWeatherCode(weatherCode){
-    console.log(weatherCode); 
     var pictureCode;
     if(weatherCode == 0 || weatherCode == 1)
     {
@@ -171,10 +176,10 @@ function writeBottom(dataDaily, uniqueDays, days, data){
         var d= new Date(uniqueDays[i]); 
         var dayName = days[d.getDay()]; 
         var element = document.createElement("div"); 
-        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${dayName}</h5> <p class='card-text'> ${dataDaily.temperature_2m_max[i]} / ${dataDaily.temperature_2m_min[i] }${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.daily.weather_code[i]))}' class='img-fluid weatherIcon' > </div>`; 
+        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${dayName}</h5> <p class='card-text'> ${dataDaily.temperature_2m_max[i]} / ${dataDaily.temperature_2m_min[i] }${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.daily.weather_code[i]), 1)}' class='img-fluid weatherIcon' > </div>`; 
         element.setAttribute("class", "card text-center mb-3"); 
         element.setAttribute("id", i); 
-        element.setAttribute("style", "width:12rem");
+        element.style.minWidth = "120px";
         element.addEventListener('click', () =>{
             const clickedID = event.currentTarget.id; 
             displayHourlyData(data, uniqueDays, clickedID); 
@@ -209,29 +214,44 @@ function displayHourlyData(data, uniqueDays, index){
     var selectedDate = uniqueDays[index]; 
     dailyView.setAttribute("style", "display:none !important"); 
     hourlyView.setAttribute("style", "display:flex"); 
-    if(index!=0){ // ZA DANES JE LOGIKA DRUGAČNA
-        writeDailyCards(data, selectedDate); 
-    }
+    writeHourlyCards(data, selectedDate, index); 
 }
 
-function writeDailyCards(data, selectedDate){
+function writeHourlyCards(data, selectedDate, dateIndex){
+    console.log(dateIndex);
     let dayIndex= -1; 
     let index= -1; 
     for(var i=0; i<data.hourly.time.length; i++){
         if(selectedDate == data.hourly.time[i].split("T")[0]){
             dayIndex = i ;
-            console.log(dayIndex);
             break;
         }
     }
+
+    
     hourlyCards.innerHTML = " "; 
-    for(var i=0; i<12; i++){
-        index= dayIndex + i*2; 
-        var element = document.createElement("div"); 
-        element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${data.hourly.time[index].split("T")[1]}</h5> <p class='card-text'> ${data.hourly.temperature_2m[index]}${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.hourly.weather_code[index]))}' class='img-fluid weatherIcon' > </div>`; 
-        element.setAttribute("class", "card text-center mb-3"); 
-        element.setAttribute("style", "width:12rem");
-        hourlyCards.appendChild(element); 
+    if(dateIndex!=0 && dateIndex>0){
+        for(var i=0; i<12; i++){
+            index= dayIndex + i*2; 
+            var element = document.createElement("div");        
+            element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${data.hourly.time[index].split("T")[1]}</h5> <p class='card-text'> ${data.hourly.temperature_2m[index]}${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.hourly.weather_code[index]),data.hourly.is_day[index] )}' class='img-fluid weatherIcon' > </div>`; 
+            element.setAttribute("class", "card text-center mb-3"); 
+            element.setAttribute("style", "width:12rem");
+            hourlyCards.appendChild(element); 
+        }
+    }
+    else if(dateIndex == 0){
+        let current = new Date(); 
+        let currentHour = current.getHours()+1; 
+        console.log((24-currentHour)/2); 
+        for(var i=0; i< (24-currentHour)/2; i++){
+            index= currentHour + i*2; 
+            var element = document.createElement("div");        
+            element.innerHTML = `<div class='card-body'> <h5 class='card-title'> ${data.hourly.time[index].split("T")[1]}</h5> <p class='card-text'> ${data.hourly.temperature_2m[index]}${data.hourly_units.temperature_2m} </p> <img alt='picture' src='images/${getIcon(proccessWeatherCode(data.hourly.weather_code[index]),data.hourly.is_day[index] )}' class='img-fluid weatherIcon' > </div>`; 
+            element.setAttribute("class", "card text-center mb-3"); 
+            element.setAttribute("style", "width:12rem");
+            hourlyCards.appendChild(element); 
+        }
     }
 }
 

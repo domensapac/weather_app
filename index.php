@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container d-flex flex-column min-vh-100">
     <div class="row">
         <div class="col-4 mt-5">
         </div>
@@ -42,17 +42,18 @@
             </div>
         </div>
     </div>
-    
-    <div class="row justify-content-md-center" >
+
+
+    <div class="row mt-auto justify-content-md-center" >
         <div id="contentArea" class="col-12 mb-5">
-            <div id="dailyView" class="d-flex overflow-auto justify-content-center ">
+            <div id="dailyView" class="d-flex overflow-x-auto justify-content-md-center custom-scrollbar py-3">
 
             </div>
-            <div id="hourlyView"  class="overflow-auto justify-content-center flex-column">
+            <div id="hourlyView"  class="overflow-scroll justify-content-center flex-column">
                 <div> 
                     <button id="backBtn" style="height:50%" class="btn btn-outline-light mb-3"><i class="fa-solid fa-backward"></i></button>
                 </div>
-                <div id="hourlyCards" class="d-flex overflow-auto">
+                <div id="hourlyCards" class="d-flex overflow-x-auto justify-content-md-center custom-scrollbar py-3">
                 </div>
             </div>
         </div>

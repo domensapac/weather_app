@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Outfit:wght@100..900&display=swap');
 
 body, html{
+    height: 100%;
     padding:0; 
     margin:0; 
 }
@@ -15,17 +16,7 @@ body{
     font-weight: 800;
 }
 #contentArea{
-    position:absolute;
-    bottom: 0;
-}
 
-
-.cardElement{
-    border: 2px solid black; 
-    border-radius: 10%;
-    min-height: 150px;
-    width: 150px;  
-    box-shadow: 5px 5px lightgray;
 }
 
 .dayText{
@@ -68,6 +59,7 @@ body{
 }
 .card{
     background-color:transparent !important;
+    border: 0px; 
 }
 
 .card-title{
@@ -93,4 +85,18 @@ body{
 #appTempDisplay{
     color:rgb(170, 167, 167);
     font-style: italic;
+}
+
+@media (max-width: 1250px) {
+    #otherDisplay, #placeDisplay{
+        font-size: 1.5rem;
+    }
+
+    #tempDisplay{
+        font-size: 2.5rem;
+    }
+
+    #contentArea{
+        margin-bottom: 0px;
+    }
 }
