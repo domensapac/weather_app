@@ -37,10 +37,10 @@
             <div id="appTempDisplay" class="mt-2">
             </div>
         </div>
-        <div class="col-5">
+        <div class="col-4">
             
         </div>
-        <div class="col-3 align-items-start">
+        <div class="col-4 align-items-start">
             <div id="otherDisplay" class="mt-4">
             </div>
         </div>

@@ -64,35 +64,50 @@ window.onload = () =>{
 }; 
 
 async function getCoords(name){ //dobimo koordinate kraja
-    const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=1&language=en&format=json`
-    const response = await fetch(apiUrl);
-    let data = await response.json(); 
-    placeNameForDisplay= data.results[0].name + ', ' + data.results[0].country;
+    try{
+        const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=1&language=en&format=json`
+        const response = await fetch(apiUrl);
 
-    /*updateText(
-        data.results[0].name,
-        data.results[0].admin1,
-        data.results[0].elevation,
+        if(!response.ok){
+            throw new Error(`Connection error: ${response.status}`);
+        }
+
+        let data = await response.json(); 
+        placeNameForDisplay= data.results[0].name + ', ' + data.results[0].country;
+        getData(
         data.results[0].latitude,
         data.results[0].longitude,
     )
-    */
-
-    getData(
-        data.results[0].latitude,
-        data.results[0].longitude,
-    )
+    }catch(error){
+        console.error("Prišlo je do napake:", error);
+        alert("Cant find this place. Try again");  
+        location.reload(); 
+    }
 }
 
 async function getData(latitude, longitude){ //dobimo podatke za kraj
     dailyView.innerHTML = "<div class='d-flex justify-content-center'><div class='spinner-border' role='status'><span class='visually-hidden'>Loading...</span></div></div>" ; 
-    const latVal = latitude; 
-    const lonVal = longitude;
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latVal}&longitude=${lonVal}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,is_day&current=temperature_2m,is_day,apparent_temperature,wind_speed_10m,relative_humidity_2m,rain,precipitation,surface_pressure&timezone=Europe%2FBerlin&forecast_days=7`; 
-    const response = await fetch(apiUrl); 
-    let data = await response.json(); 
-    outputDataConsole(data); 
-    displayData(data);
+    
+    try{
+        const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,weather_code&hourly=temperature_2m,precipitation_probability,precipitation,weather_code,is_day&current=temperature_2m,is_day,apparent_temperature,wind_speed_10m,relative_humidity_2m,rain,precipitation,surface_pressure&timezone=Europe%2FBerlin&forecast_days=7`; 
+        const response = await fetch(apiUrl);
+
+        if(!response.ok){
+            throw new Error(`Connection error: ${response.status}`);
+        }
+
+        let data = await response.json(); 
+        outputDataConsole(data); 
+        displayData(data);
+    }catch (error){
+        console.error("Prišlo je do napake:", error);
+                
+        dailyView.innerHTML = `
+            <div class="alert alert-danger text-center" role="alert">
+                <i class="fa-solid fa-triangle-exclamation"></i> 
+                Error.
+            </div>`;
+    }
 }
 
 function updateText(placeName, municipality, elevation, latitude, longitude){
