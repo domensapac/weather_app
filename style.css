@@ -174,3 +174,9 @@ svg {
         width:65%;
     }
 }
+
+@media (max-width: 600px) {
+    .infoTextValue{
+        font-size: 1rem;
+    }
+}
