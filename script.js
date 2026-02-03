@@ -65,15 +65,16 @@ window.onload = () =>{
 
 async function getCoords(name){ //dobimo koordinate kraja
     try{
-        const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=1&language=en&format=json`
+        const apiUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${name}&count=10&language=en&format=json`
         const response = await fetch(apiUrl);
 
         if(!response.ok){
             throw new Error(`Connection error: ${response.status}`);
         }
-
+        
         let data = await response.json(); 
         placeNameForDisplay= data.results[0].name + ', ' + data.results[0].country;
+        console.log(data);
         getData(
         data.results[0].latitude,
         data.results[0].longitude,
@@ -138,9 +139,9 @@ function writeTopLeft(name, temperature, apparent, unit){
 }
 
 function writeTopRight(humidity, windSpeed, pressure, pressureUnit, unitHumidity, unitWind){
-    otherDisplay.innerHTML = `<div class='mt-2'><i class="fa-solid fa-droplet"></i> <span> Humidity: ${humidity} ${unitHumidity}</span> </div>
-   <div class='mt-4 mb-4'> <i class="fa-solid fa-wind"></i> <span> Wind speed: ${windSpeed} ${unitWind}</span> </div>
-   <div class='mt-4 mb-4'><i class="fa-brands fa-cloudflare"></i><span> Air pressure: ${pressure} ${pressureUnit}</span> </div>`;
+    otherDisplay.innerHTML = `<div class='mt-2'> <div class='infoText'> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-droplets-icon lucide-droplets"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg><span> Humidity </span> </div> <span> ${humidity} ${unitHumidity}</span> </div>
+   <div class='mt-4 mb-4'> <div class='infoText'> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wind-icon lucide-wind"><path d="M12.8 19.6A2 2 0 1 0 14 16H2"/><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2"/><path d="M9.8 4.4A2 2 0 1 1 11 8H2"/></svg><span> Wind speed </span> </div> <span>${windSpeed} ${unitWind}</span> </div>
+   <div class='mt-4 mb-4'> <div class='infoText'> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wind-arrow-down-icon lucide-wind-arrow-down"><path d="M10 2v8"/><path d="M12.8 21.6A2 2 0 1 0 14 18H2"/><path d="M17.5 10a2.5 2.5 0 1 1 2 4H2"/><path d="m6 6 4 4 4-4"/></svg><span> Air pressure </span></div> <span> ${pressure} ${pressureUnit}</span> </div>`;
 
 }
 
@@ -280,7 +281,7 @@ function writeHourlyCards(data, selectedDate, dateIndex){
 
 function changeLocation(){
     inputContainer.setAttribute("style", "display: flex !important"); 
-    mainContainer.setAttribute("style", "display: flex !important"); 
+    mainContainer.setAttribute("style", "display: none !important"); 
 }
 
 

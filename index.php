@@ -8,12 +8,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
 <body>
 <div class="min-vh-100 d-flex justify-content-center align-items-center" id="inputContainer">
     <form id="weatherForm">
+        <div class="d-flex justify-content-center">
+            <span id="inputText">Which place interests you?</span>
+        </div>
+        <br>
+        <i id="inputIcon" class="fa-solid fa-magnifying-glass"></i>
         <input class="form-control" type="text" name="placeName" id="placeInput" placeholder="Search...">
-        <input class="btn btn-light"type="submit" >
     </form> 
 </div>
 
@@ -37,10 +40,10 @@
             <div id="appTempDisplay" class="mt-2">
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-5">
             
         </div>
-        <div class="col-4 align-items-start">
+        <div class="col-3 align-items-start">
             <div id="otherDisplay" class="mt-4">
             </div>
         </div>
