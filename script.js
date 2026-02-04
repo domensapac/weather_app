@@ -82,7 +82,7 @@ async function getCoords(name){ //dobimo koordinate kraja
 
         let data = await response.json(); 
         if(data.results.length == 1){
-            placeNameForDisplay= data.results[0].name + ', ' + data.results[0].country;
+            placeNameForDisplay= data.results[0].name + ', ' + data.results[0].country ;
             getData(
             data.results[0].latitude,
             data.results[0].longitude)
@@ -132,10 +132,19 @@ function pickLocation(data){
 
         element.innerHTML = `${flag} ${data.results[i].name}, ${data.results[i].admin1}`;
         element.setAttribute("id", i);
+
+        element.addEventListener('mouseenter', ()=>{
+            placeInput.value = element.innerHTML;
+        });
+
+        element.addEventListener('mouseleave', ()=>{
+            placeInput.value = "";
+        });
+
         element.addEventListener('click', ()=>{
             let clickedID= event.currentTarget.id;
             console.log(clickedID);
-            placeNameForDisplay= data.results[clickedID].name + ', ' + data.results[clickedID].country;
+            placeNameForDisplay= data.results[clickedID].name + ', ' + data.results[clickedID].country ;
             getData(
                 data.results[clickedID].latitude,
                 data.results[clickedID].longitude)
@@ -349,5 +358,4 @@ function changeLocation(){
     placeInput.readOnly = false; 
     placeInput.value = "";
 }
-
 

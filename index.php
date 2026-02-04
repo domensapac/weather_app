@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <body>
-<div class="min-vh-100 d-flex flex-column justify-content-center align-items-center" id="inputContainer">
+<div class="pb-5 min-vh-100 d-flex flex-column justify-content-center align-items-center" id="inputContainer">
     <div class="d-flex justify-content-center">
         <span id="inputText">Which place interests you?</span>
     </div>
