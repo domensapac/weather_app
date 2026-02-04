@@ -20,6 +20,7 @@ var backBtn;
 var locationIcon; 
 var inputContainer; 
 var mainContainer; 
+var placeOptions; 
 
 window.onload = () =>{
     //placeNameTxt = document.getElementById("placeName"); 
@@ -43,7 +44,7 @@ window.onload = () =>{
     inputContainer = document.getElementById("inputContainer"); 
     mainContainer = document.getElementById("mainContainer"); 
     mainContainer.setAttribute("style", "display: none !important"); 
-
+    placeOptions = document.getElementById("placeOptions");
     //getCoords(); 
 
     weatherForm.addEventListener('submit', function(event){
@@ -51,10 +52,11 @@ window.onload = () =>{
         const placeName = placeInput.value;
         getCoords(placeName);
         placeInput.value = "";
-        inputContainer.setAttribute("style", "display: none !important"); 
-        mainContainer.setAttribute("style", "display: flex !important"); 
+        //inputContainer.setAttribute("style", "display: none !important"); 
+        //mainContainer.setAttribute("style", "display: flex !important"); 
 
     }); 
+    
 
     backBtn.addEventListener('click', () =>{
         hourlyView.setAttribute("style", "display:none"); 
@@ -71,18 +73,58 @@ async function getCoords(name){ //dobimo koordinate kraja
         if(!response.ok){
             throw new Error(`Connection error: ${response.status}`);
         }
-        
+
         let data = await response.json(); 
-        placeNameForDisplay= data.results[0].name + ', ' + data.results[0].country;
+        if(data.results.length == 1){
+            placeNameForDisplay= data.results[0].name + ', ' + data.results[0].country;
+            getData(
+            data.results[0].latitude,
+            data.results[0].longitude)
+        }
+        else{               
+            pickLocation(data);
+        }
+
         console.log(data);
-        getData(
+        /*getData(
         data.results[0].latitude,
-        data.results[0].longitude,
-    )
+        data.results[0].longitude)
+        */
+    
     }catch(error){
         console.error("Prišlo je do napake:", error);
         alert("Cant find this place. Try again");  
         location.reload(); 
+    }
+}
+
+function getFlagEmoji(countryCode) {
+    if (!countryCode) return "📍"; 
+
+    return countryCode
+        .toUpperCase()
+        .replace(/./g, (char) => 
+            String.fromCodePoint(char.charCodeAt(0) + 127397)
+        );
+}
+
+function pickLocation(data){
+    placeOptions.innerHTML = "";
+    for(let i=0; i<data.results.length; i++){
+        let element = document.createElement("div"); 
+        const flag = getFlagEmoji(data.results[i].country_code);
+
+        element.innerHTML = `${flag} ${data.results[i].name}, ${data.results[i].admin1}`;
+        element.setAttribute("id", i);
+        element.addEventListener('click', ()=>{
+            let clickedID= event.currentTarget.id;
+            console.log(clickedID);
+            placeNameForDisplay= data.results[clickedID].name + ', ' + data.results[clickedID].country;
+            getData(
+                data.results[clickedID].latitude,
+                data.results[clickedID].longitude)
+        });
+        placeOptions.appendChild(element); 
     }
 }
 
@@ -96,6 +138,9 @@ async function getData(latitude, longitude){ //dobimo podatke za kraj
         if(!response.ok){
             throw new Error(`Connection error: ${response.status}`);
         }
+
+        inputContainer.setAttribute("style", "display: none !important"); 
+        mainContainer.setAttribute("style", "display: flex !important"); 
 
         let data = await response.json(); 
         outputDataConsole(data); 
@@ -281,6 +326,7 @@ function writeHourlyCards(data, selectedDate, dateIndex){
 
 function changeLocation(){
     inputContainer.setAttribute("style", "display: flex !important"); 
+    placeOptions.innerHTML = ""; 
     mainContainer.setAttribute("style", "display: none !important"); 
 }
 

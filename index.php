@@ -17,6 +17,9 @@
         <br>
         <i id="inputIcon" class="fa-solid fa-magnifying-glass"></i>
         <input class="form-control" type="text" name="placeName" id="placeInput" placeholder="Search...">
+        <div id="placeOptions">
+            
+        </div>
     </form> 
 </div>
 
