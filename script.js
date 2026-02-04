@@ -21,6 +21,7 @@ var locationIcon;
 var inputContainer; 
 var mainContainer; 
 var placeOptions; 
+var crossIcon; 
 
 window.onload = () =>{
     //placeNameTxt = document.getElementById("placeName"); 
@@ -45,13 +46,14 @@ window.onload = () =>{
     mainContainer = document.getElementById("mainContainer"); 
     mainContainer.setAttribute("style", "display: none !important"); 
     placeOptions = document.getElementById("placeOptions");
+    crossIcon = document.getElementById("crossIcon");
+
     //getCoords(); 
 
     weatherForm.addEventListener('submit', function(event){
         event.preventDefault();
         const placeName = placeInput.value;
         getCoords(placeName);
-        placeInput.value = "";
         //inputContainer.setAttribute("style", "display: none !important"); 
         //mainContainer.setAttribute("style", "display: flex !important"); 
 
@@ -62,6 +64,10 @@ window.onload = () =>{
         hourlyView.setAttribute("style", "display:none"); 
         dailyView.setAttribute("style", "display:flex"); 
     }); 
+
+    crossIcon.addEventListener('click', ()=>{
+        crossClicked();
+    });
 
 }; 
 
@@ -83,6 +89,9 @@ async function getCoords(name){ //dobimo koordinate kraja
         }
         else{               
             pickLocation(data);
+            crossIcon.setAttribute("style", "display: flex !important"); 
+            placeInput.readOnly = true; 
+            placeInput.blur();
         }
 
         console.log(data);
@@ -108,6 +117,13 @@ function getFlagEmoji(countryCode) {
         );
 }
 
+function crossClicked(){
+    crossIcon.setAttribute("style", "display: none !important"); 
+    placeInput.readOnly = false; 
+    placeInput.value = ""; 
+    placeOptions.innerHTML = "";
+}
+
 function pickLocation(data){
     placeOptions.innerHTML = "";
     for(let i=0; i<data.results.length; i++){
@@ -126,6 +142,7 @@ function pickLocation(data){
         });
         placeOptions.appendChild(element); 
     }
+
 }
 
 async function getData(latitude, longitude){ //dobimo podatke za kraj
@@ -328,6 +345,9 @@ function changeLocation(){
     inputContainer.setAttribute("style", "display: flex !important"); 
     placeOptions.innerHTML = ""; 
     mainContainer.setAttribute("style", "display: none !important"); 
+    crossIcon.setAttribute("style", "display: none !important"); 
+    placeInput.readOnly = false; 
+    placeInput.value = "";
 }
 
 

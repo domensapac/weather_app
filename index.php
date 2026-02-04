@@ -9,16 +9,17 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <body>
-<div class="min-vh-100 d-flex justify-content-center align-items-center" id="inputContainer">
-    <form id="weatherForm">
-        <div class="d-flex justify-content-center">
-            <span id="inputText">Which place interests you?</span>
-        </div>
+<div class="min-vh-100 d-flex flex-column justify-content-center align-items-center" id="inputContainer">
+    <div class="d-flex justify-content-center">
+        <span id="inputText">Which place interests you?</span>
+    </div>
+    <form id="weatherForm" >
         <br>
         <i id="inputIcon" class="fa-solid fa-magnifying-glass"></i>
+        <i id="crossIcon" class="fa-solid fa-xmark"></i>
         <input class="form-control" type="text" name="placeName" id="placeInput" placeholder="Search...">
         <div id="placeOptions">
-            
+
         </div>
     </form> 
 </div>
@@ -35,7 +36,7 @@
     </div>
 
     <div class="row">
-        <div class="col-4 align-items-start">
+        <div id="firstCol" class="col-4 align-items-start">
             <div id="placeDisplay" class="mt-4 ">
             </div>
             <div id="tempDisplay" class="mt-2"> 
@@ -43,7 +44,7 @@
             <div id="appTempDisplay" class="mt-2">
             </div>
         </div>
-        <div class="col-5">
+        <div id="secondCol" class="col-5">
             
         </div>
         <div class="col-3 align-items-start">

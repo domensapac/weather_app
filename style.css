@@ -104,11 +104,12 @@ body{
 
 #weatherForm{
     width: 45%; 
+    position: relative;
 }
 
 #placeInput{
     padding-left: 2rem;
-    box-shadow: 4px 4px 10px gray; 
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.5); 
     line-height: 2;
     background-color: rgba(255, 255, 255, 0.15); 
     border-radius: 30px;
@@ -118,13 +119,32 @@ body{
     outline:none;
     border: 1px solid;
     border-color: rgba(255, 0, 0, 0.7);
-    box-shadow: 7px 7px 10px gray;
+    box-shadow: 7px 7px 10px rgba(0,0,0,0.5);
+}
+
+#weatherForm:focus-within #inputIcon{
+    transform: scale(1.25);
+    transition: 75ms ease;
 }
 
 #inputIcon{
+    display: flex;
     position: absolute; 
     margin-top: 14px;
     margin-left: 10px; 
+}
+
+#crossIcon{    
+    display:none;
+    margin-top: 14px;
+    right: 0;
+    margin-right: 10px;
+    position: absolute;
+}
+
+#crossIcon:hover{
+    transform: scale(1.25);
+    transition: 75ms ease;
 }
 
 #inputText{
@@ -145,10 +165,11 @@ svg {
     opacity: 0.8;
 }
 
+
 #placeOptions{
     color:white;
     list-style-type: none;
-    box-shadow: 4px 4px 10px gray; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     background-color: rgba(255, 255, 255, 0.15); 
     border-radius: 30px;
     font-size: 1.25rem;
@@ -187,15 +208,25 @@ svg {
     }
 }
 
+@media (max-width: 1050px) {
+    #inputText{
+        font-size:2rem;
+    }
+}
+
 @media (max-width: 950px) {
     #inputText{
-        font-size:1.5rem;
+        font-size:1.75rem;
+    }
+
+    #placeOptions{
+        font-size: 1rem;
     }
 }
 
 @media (max-width: 700px) {
     #inputText{
-        font-size:1.25rem;
+        font-size:1.50rem;
     }
 
     #weatherForm{
@@ -206,5 +237,31 @@ svg {
 @media (max-width: 600px) {
     .infoTextValue{
         font-size: 1rem;
+    }
+
+    .infoText{
+        font-size: 1.25rem;
+    }
+
+    #inputText{
+        font-size: 1.25rem;
+    }
+
+    #weatherForm{
+        width:75%;
+    }
+}
+
+@media (max-width: 500px) {
+    #tempDisplay{
+        font-size:2rem;
+    }
+
+    #firstCol{
+        width: 50%; 
+    }
+
+    #secondCol{
+        width: 17%;
     }
 }
